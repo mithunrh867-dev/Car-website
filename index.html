@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOCTIS — The City is Asleep</title>
+  <meta name="description" content="NOCTIS — An electric grand tourer born in total blackout. Pure motion, quiet power, and a single continuous line of light.">
+
+  <!-- Google Fonts: Archivo (with wdth axis for expanded display), Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,300;125,400&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%2307080A%22/><text y=%2270%22 x=%2215%22 font-family=%22sans-serif%22 font-size=%2270%22 fill=%22%23CFE3FF%22 font-weight=%22bold%22>N</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Fixed Film Grain Overlay -->
+  <canvas id="grain-canvas" class="grain-overlay" aria-hidden="true"></canvas>
+
+  <!-- Custom Headlight Cursor (Desktop only) -->
+  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+    <div class="cursor-bar"></div>
+    <span class="cursor-label"></span>
+  </div>
+
+  <!-- Preloader Screen -->
+  <div id="preloader" class="preloader" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="preloader-content">
+      <div class="preloader-brand">NOCTIS</div>
+      <div class="preloader-line-wrapper">
+        <div id="preloader-line" class="preloader-line"></div>
+      </div>
+      <div class="preloader-hud">
+        <span class="preloader-label">INITIALIZING SEQUENCE</span>
+        <span id="preloader-counter" class="preloader-counter">000</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header id="main-nav" class="main-nav">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo" data-cursor="MENU" aria-label="NOCTIS Home">NOCTIS</a>
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#lineup" class="nav-link" data-cursor="VIEW">MODELS</a>
+        <a href="#dismantle" class="nav-link" data-cursor="VIEW">TECHNOLOGY</a>
+        <a href="#reserve" class="nav-link" data-cursor="RESERVE">RESERVE</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- SECTION 1: HERO (Pinned Scrollytelling, ~600vh) -->
+    <section id="hero" class="pinned-wrapper hero-wrapper" aria-label="NOCTIS Hero Experience">
+      <div class="stage hero-stage">
+        <!-- Canvas for scroll-scrubbed hero frames -->
+        <canvas id="hero-canvas" class="sequence-canvas" aria-label="NOCTIS electric vehicle driving through blacked-out city"></canvas>
+        <div id="hero-fade-overlay" class="hero-fade-overlay" aria-hidden="true"></div>
+
+        <!-- Left-edge HUD -->
+        <aside class="hero-hud" aria-hidden="true">
+          <div class="hud-item hud-chapter">
+            <span class="hud-tick"></span>
+            <span id="hud-chapter-text">01 / 04</span>
+          </div>
+          <div class="hud-divider"></div>
+          <div class="hud-item hud-telemetry">
+            <div class="telemetry-row">
+              <span class="telemetry-label">SPEED</span>
+              <span id="hud-speed" class="telemetry-value">000 KM/H</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">DIST</span>
+              <span id="hud-distance" class="telemetry-value">0.0 KM</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Chapter 1: 0–12% -->
+        <article class="hero-chapter chapter-1 is-active" data-chapter="1">
+          <div class="line-mask is-revealed">
+            <h1 class="display-title hero-headline">NOCTIS</h1>
+          </div>
+          <div class="line-mask is-revealed">
+            <p class="hero-subline">The city is asleep.</p>
+          </div>
+          <div class="hero-scroll-hint">
+            <span class="hud-mono">SCROLL TO WAKE IT</span>
+            <div class="hint-pulse-line"></div>
+          </div>
+        </article>
+
+        <!-- Chapter 2: 22–40% -->
+        <article class="hero-chapter chapter-2" data-chapter="2">
+          <div class="line-mask">
+            <p class="display-lead">It doesn't need the city's light.</p>
+          </div>
+        </article>
+
+        <!-- Chapter 3: 50–68% -->
+        <article class="hero-chapter chapter-3" data-chapter="3">
+          <div class="line-mask">
+            <p class="display-lead">It brings its own.</p>
+          </div>
+        </article>
+
+        <!-- Chapter 4: 80–100% -->
+        <article class="hero-chapter chapter-4" data-chapter="4">
+          <div class="line-mask">
+            <h2 class="display-title model-title">GT-E</h2>
+          </div>
+          <div class="line-mask">
+            <div class="hud-mono model-specs">0–100 KM/H 3.1S · 640 KM RANGE · DUAL MOTOR</div>
+          </div>
+          <div class="line-mask">
+            <a href="#lineup" class="hero-action-link" data-cursor="VIEW">Discover the GT-E →</a>
+          </div>
+        </article>
+
+        <!-- Pinned Section Bottom Progress Line -->
+        <div class="pinned-progress-track">
+          <div id="hero-progress-line" class="pinned-progress-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: STATEMENT (Not pinned, 100vh) -->
+    <section id="statement" class="statement-section" aria-label="Design Statement">
+      <div class="statement-container">
+        <span class="hud-mono statement-label">02 — ENGINEERING</span>
+        <blockquote id="statement-text" class="statement-quote display-quote">
+          <!-- Populated by JS to create word-by-word reveal -->
+          Every part was designed to disappear into one line of light.
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- SECTION 3: DISMANTLE (Pinned Scrollytelling, ~350vh) -->
+    <section id="dismantle" class="pinned-wrapper dismantle-wrapper" aria-label="Dismantle and Architecture">
+      <div class="stage dismantle-stage">
+        <header class="dismantle-header">
+          <span class="hud-mono dismantle-meta">ARCHITECTURE</span>
+          <h2 class="display-heading dismantle-title">Look closer.</h2>
+        </header>
+
+        <!-- Dismantle Canvas -->
+        <canvas id="dismantle-canvas" class="sequence-canvas" aria-label="Exploded technical view of NOCTIS vehicle components"></canvas>
+
+        <!-- Dismantle Callouts (revealed after 70% progress) -->
+        <div id="dismantle-callouts-container" class="dismantle-callouts" aria-hidden="true">
+          <!-- Callout 1: Body -->
+          <div class="dismantle-callout callout-body" data-id="body">
+            <div class="callout-dot"></div>
+            <svg class="callout-svg-line" aria-hidden="true">
+              <line class="callout-line" x1="0" y1="0" x2="100%" y2="100%"></line>
+            </svg>
+            <div class="callout-box">
+              <span class="hud-mono callout-title">BODY</span>
+              <span class="callout-desc">Carbon composite monocoque</span>
+            </div>
+          </div>
+
+          <!-- Callout 2: Battery -->
+          <div class="dismantle-callout callout-battery" data-id="battery">
+            <div class="callout-dot"></div>
+            <svg class="callout-svg-line" aria-hidden="true">
+              <line class="callout-line" x1="0" y1="0" x2="100%" y2="100%"></line>
+            </svg>
+            <div class="callout-box">
+              <span class="hud-mono callout-title">BATTERY</span>
+              <span class="callout-desc">110 kWh structural pack</span>
+            </div>
+          </div>
+
+          <!-- Callout 3: Drive -->
+          <div class="dismantle-callout callout-drive" data-id="drive">
+            <div class="callout-dot"></div>
+            <svg class="callout-svg-line" aria-hidden="true">
+              <line class="callout-line" x1="0" y1="0" x2="100%" y2="100%"></line>
+            </svg>
+            <div class="callout-box">
+              <span class="hud-mono callout-title">DRIVE</span>
+              <span class="callout-desc">Dual axial-flux motors, 680 kW</span>
+            </div>
+          </div>
+
+          <!-- Callout 4: Light -->
+          <div class="dismantle-callout callout-light" data-id="light">
+            <div class="callout-dot"></div>
+            <svg class="callout-svg-line" aria-hidden="true">
+              <line class="callout-line" x1="0" y1="0" x2="100%" y2="100%"></line>
+            </svg>
+            <div class="callout-box">
+              <span class="hud-mono callout-title">LIGHT</span>
+              <span class="callout-desc">Single-line LED signature</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pinned Section Bottom Progress Line -->
+        <div class="pinned-progress-track">
+          <div id="dismantle-progress-line" class="pinned-progress-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: LINEUP (Hover Accordion, 100vh) -->
+    <section id="lineup" class="lineup-section" aria-label="Vehicle Lineup">
+      <div class="lineup-header">
+        <span class="hud-mono lineup-label">03 — THE LINEUP</span>
+        <h2 class="display-heading lineup-title">Five ways to drive the night.</h2>
+      </div>
+
+      <div class="lineup-accordion" role="region" aria-label="Model Accordion">
+        <!-- Slide 01: GT-E -->
+        <button type="button" class="lineup-slide is-open" data-index="0" aria-expanded="true" aria-controls="slide-panel-0">
+          <div class="slide-closed-view">
+            <span class="hud-mono slide-number">01</span>
+            <span class="hud-mono slide-rotated-name">GT-E</span>
+            <div class="slide-thumb-wrap">
+              <img src="assets/cars/gt-e.webp" alt="GT-E" class="slide-thumb" loading="lazy">
+            </div>
+          </div>
+          <div class="slide-open-view" id="slide-panel-0">
+            <div class="slide-active-bg-line"></div>
+            <div class="slide-image-stage">
+              <img src="assets/cars/gt-e.webp" alt="NOCTIS GT-E" class="slide-car-image" loading="lazy">
+            </div>
+            <div class="slide-content">
+              <div class="line-mask"><h3 class="display-title slide-car-name">GT-E</h3></div>
+              <div class="line-mask"><p class="slide-tagline">The grand tourer.</p></div>
+              <div class="line-mask">
+                <div class="slide-spec-row">
+                  <div class="spec-col"><span class="spec-label">RANGE</span><span class="spec-value">640 km</span></div>
+                  <div class="spec-col"><span class="spec-label">0–100 KM/H</span><span class="spec-value">3.1 s</span></div>
+                  <div class="spec-col"><span class="spec-label">POWER</span><span class="spec-value">680 kW</span></div>
+                </div>
+              </div>
+              <div class="line-mask slide-action-row">
+                <div class="swatches" aria-label="Available Colours">
+                  <span class="swatch is-active" style="background-color: #121418" title="Matte Graphite"></span>
+                  <span class="swatch" style="background-color: #EDEAE4" title="Satin Bone White"></span>
+                  <span class="swatch" style="background-color: #0E1726" title="Midnight Navy"></span>
+                  <span class="swatch" style="background-color: #3D0A0A" title="Obsidian Red"></span>
+                </div>
+                <a href="#reserve" class="slide-configure-link" data-cursor="CONFIGURE">Configure →</a>
+              </div>
+            </div>
+          </div>
+        </button>
+
+        <!-- Slide 02: S -->
+        <button type="button" class="lineup-slide" data-index="1" aria-expanded="false" aria-controls="slide-panel-1">
+          <div class="slide-closed-view">
+            <span class="hud-mono slide-number">02</span>
+            <span class="hud-mono slide-rotated-name">S</span>
+            <div class="slide-thumb-wrap">
+              <img src="assets/cars/s.webp" alt="S" class="slide-thumb" loading="lazy">
+            </div>
+          </div>
+          <div class="slide-open-view" id="slide-panel-1">
+            <div class="slide-active-bg-line"></div>
+            <div class="slide-image-stage">
+              <img src="assets/cars/s.webp" alt="NOCTIS S" class="slide-car-image" loading="lazy">
+            </div>
+            <div class="slide-content">
+              <div class="line-mask"><h3 class="display-title slide-car-name">S</h3></div>
+              <div class="line-mask"><p class="slide-tagline">Four doors, no compromise.</p></div>
+              <div class="line-mask">
+                <div class="slide-spec-row">
+                  <div class="spec-col"><span class="spec-label">RANGE</span><span class="spec-value">600 km</span></div>
+                  <div class="spec-col"><span class="spec-label">0–100 KM/H</span><span class="spec-value">3.6 s</span></div>
+                  <div class="spec-col"><span class="spec-label">POWER</span><span class="spec-value">520 kW</span></div>
+                </div>
+              </div>
+              <div class="line-mask slide-action-row">
+                <div class="swatches" aria-label="Available Colours">
+                  <span class="swatch is-active" style="background-color: #EDEAE4" title="Satin Bone White"></span>
+                  <span class="swatch" style="background-color: #121418" title="Matte Graphite"></span>
+                  <span class="swatch" style="background-color: #1A222D" title="Slate Blue"></span>
+                  <span class="swatch" style="background-color: #2B2C2E" title="Anthracite"></span>
+                </div>
+                <a href="#reserve" class="slide-configure-link" data-cursor="CONFIGURE">Configure →</a>
+              </div>
+            </div>
+          </div>
+        </button>
+
+        <!-- Slide 03: X -->
+        <button type="button" class="lineup-slide" data-index="2" aria-expanded="false" aria-controls="slide-panel-2">
+          <div class="slide-closed-view">
+            <span class="hud-mono slide-number">03</span>
+            <span class="hud-mono slide-rotated-name">X</span>
+            <div class="slide-thumb-wrap">
+              <img src="assets/cars/x.webp" alt="X" class="slide-thumb" loading="lazy">
+            </div>
+          </div>
+          <div class="slide-open-view" id="slide-panel-2">
+            <div class="slide-active-bg-line"></div>
+            <div class="slide-image-stage">
+              <img src="assets/cars/x.webp" alt="NOCTIS X" class="slide-car-image" loading="lazy">
+            </div>
+            <div class="slide-content">
+              <div class="line-mask"><h3 class="display-title slide-car-name">X</h3></div>
+              <div class="line-mask"><p class="slide-tagline">Higher, never heavier.</p></div>
+              <div class="line-mask">
+                <div class="slide-spec-row">
+                  <div class="spec-col"><span class="spec-label">RANGE</span><span class="spec-value">560 km</span></div>
+                  <div class="spec-col"><span class="spec-label">0–100 KM/H</span><span class="spec-value">4.2 s</span></div>
+                  <div class="spec-col"><span class="spec-label">POWER</span><span class="spec-value">480 kW</span></div>
+                </div>
+              </div>
+              <div class="line-mask slide-action-row">
+                <div class="swatches" aria-label="Available Colours">
+                  <span class="swatch is-active" style="background-color: #0B192C" title="Midnight Blue"></span>
+                  <span class="swatch" style="background-color: #121418" title="Matte Graphite"></span>
+                  <span class="swatch" style="background-color: #EDEAE4" title="Satin Bone White"></span>
+                  <span class="swatch" style="background-color: #20252D" title="Carbon"></span>
+                </div>
+                <a href="#reserve" class="slide-configure-link" data-cursor="CONFIGURE">Configure →</a>
+              </div>
+            </div>
+          </div>
+        </button>
+
+        <!-- Slide 04: R -->
+        <button type="button" class="lineup-slide" data-index="3" aria-expanded="false" aria-controls="slide-panel-3">
+          <div class="slide-closed-view">
+            <span class="hud-mono slide-number">04</span>
+            <span class="hud-mono slide-rotated-name">R</span>
+            <div class="slide-thumb-wrap">
+              <img src="assets/cars/r.webp" alt="R" class="slide-thumb" loading="lazy">
+            </div>
+          </div>
+          <div class="slide-open-view" id="slide-panel-3">
+            <div class="slide-active-bg-line"></div>
+            <div class="slide-image-stage">
+              <img src="assets/cars/r.webp" alt="NOCTIS R" class="slide-car-image" loading="lazy">
+            </div>
+            <div class="slide-content">
+              <div class="line-mask"><h3 class="display-title slide-car-name">R</h3></div>
+              <div class="line-mask"><p class="slide-tagline">Built for the track.</p></div>
+              <div class="line-mask">
+                <div class="slide-spec-row">
+                  <div class="spec-col"><span class="spec-label">RANGE</span><span class="spec-value">420 km</span></div>
+                  <div class="spec-col"><span class="spec-label">0–100 KM/H</span><span class="spec-value">2.4 s</span></div>
+                  <div class="spec-col"><span class="spec-label">POWER</span><span class="spec-value">900 kW</span></div>
+                </div>
+              </div>
+              <div class="line-mask slide-action-row">
+                <div class="swatches" aria-label="Available Colours">
+                  <span class="swatch is-active" style="background-color: #0A0B0D" title="Satin Black"></span>
+                  <span class="swatch" style="background-color: #8C100B" title="Apex Red"></span>
+                  <span class="swatch" style="background-color: #1E2024" title="Stealth Grey"></span>
+                  <span class="swatch" style="background-color: #EDEAE4" title="Bone"></span>
+                </div>
+                <a href="#reserve" class="slide-configure-link" data-cursor="CONFIGURE">Configure →</a>
+              </div>
+            </div>
+          </div>
+        </button>
+
+        <!-- Slide 05: ONE -->
+        <button type="button" class="lineup-slide" data-index="4" aria-expanded="false" aria-controls="slide-panel-4">
+          <div class="slide-closed-view">
+            <span class="hud-mono slide-number">05</span>
+            <span class="hud-mono slide-rotated-name">ONE</span>
+            <div class="slide-thumb-wrap">
+              <img src="assets/cars/one.webp" alt="ONE" class="slide-thumb" loading="lazy">
+            </div>
+          </div>
+          <div class="slide-open-view" id="slide-panel-4">
+            <div class="slide-active-bg-line"></div>
+            <div class="slide-image-stage">
+              <img src="assets/cars/one.webp" alt="NOCTIS ONE" class="slide-car-image" loading="lazy">
+            </div>
+            <div class="slide-content">
+              <div class="line-mask"><h3 class="display-title slide-car-name">ONE</h3></div>
+              <div class="line-mask"><p class="slide-tagline">The future, early.</p></div>
+              <div class="line-mask">
+                <div class="slide-spec-row">
+                  <div class="spec-col"><span class="spec-label">STATUS</span><span class="spec-value">Concept</span></div>
+                  <div class="spec-col"><span class="spec-label">TARGET</span><span class="spec-value">&lt; 1.9 s</span></div>
+                  <div class="spec-col"><span class="spec-label">POWERTRAIN</span><span class="spec-value">Quad-Motor</span></div>
+                </div>
+              </div>
+              <div class="line-mask slide-action-row">
+                <div class="swatches" aria-label="Available Colours">
+                  <span class="swatch is-active" style="background-color: #C5C9D0" title="Liquid Silver"></span>
+                  <span class="swatch" style="background-color: #07080A" title="Asphalt Deep"></span>
+                  <span class="swatch" style="background-color: #1B1F24" title="Graphite Metal"></span>
+                  <span class="swatch" style="background-color: #E1251B" title="Signal Red"></span>
+                </div>
+                <a href="#reserve" class="slide-configure-link" data-cursor="CONFIGURE">Configure →</a>
+              </div>
+            </div>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- SECTION 5: RESERVE (100vh) -->
+    <section id="reserve" class="reserve-section" aria-label="Reserve Your Vehicle">
+      <div class="reserve-content">
+        <h2 class="display-title reserve-heading">Drive the night.</h2>
+        <p class="reserve-subline">Limited production allocations open for global delivery beginning Q4 2027.</p>
+        <div class="reserve-btn-wrap">
+          <a href="#reserve-dialog" class="reserve-btn" data-cursor="RESERVE">
+            <span class="reserve-tick" aria-hidden="true"></span>
+            <span class="reserve-btn-text">RESERVE YOUR NOCTIS</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-top">
+      <span class="footer-brand">NOCTIS</span>
+      <div class="footer-links-grid">
+        <div class="footer-column">
+          <span class="hud-mono footer-col-title">MODELS</span>
+          <a href="#lineup" class="footer-link">GT-E Grand Tourer</a>
+          <a href="#lineup" class="footer-link">S Sport Sedan</a>
+          <a href="#lineup" class="footer-link">X Coupe SUV</a>
+          <a href="#lineup" class="footer-link">R Track Coupe</a>
+          <a href="#lineup" class="footer-link">ONE Hypercar</a>
+        </div>
+        <div class="footer-column">
+          <span class="hud-mono footer-col-title">TECHNOLOGY</span>
+          <a href="#dismantle" class="footer-link">Axial-Flux Motors</a>
+          <a href="#dismantle" class="footer-link">110 kWh Pack</a>
+          <a href="#dismantle" class="footer-link">Composite Monocoque</a>
+          <a href="#dismantle" class="footer-link">Xenon LED System</a>
+        </div>
+        <div class="footer-column">
+          <span class="hud-mono footer-col-title">NOCTIS GLOBAL</span>
+          <a href="#reserve" class="footer-link">Private Commissions</a>
+          <a href="#reserve" class="footer-link">Atelier Network</a>
+          <a href="#reserve" class="footer-link">Investor Relations</a>
+          <a href="#reserve" class="footer-link">Press & Media</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="hud-mono footer-copy">© 2026 NOCTIS (FICTIONAL BRAND). ALL RIGHTS RESERVED.</span>
+      <span class="hud-mono footer-note">BUILT IN BLACKOUT</span>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
+

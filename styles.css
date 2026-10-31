@@ -1,0 +1,1339 @@
+/* ==========================================================================
+   NOCTIS — DESIGN SYSTEM & STYLESHEET
+   Strict flat aesthetic: No gradients, no glassmorphism, no glows, no shadows.
+   Only flat solid colors, 1px hairlines, photography, and precision type.
+   ========================================================================== */
+
+:root {
+  --asphalt: #07080A;
+  --graphite: #121418;
+  --fog: #8A8F98;
+  --bone: #EDEAE4;
+  --xenon: #CFE3FF;
+  --taillight: #E1251B;
+  --hairline: rgba(237, 234, 228, 0.12);
+  --hairline-solid: #212328;
+  --easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --font-display: 'Archivo', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Base Reset & Typography */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--asphalt);
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  overflow-x: clip; /* Clean horizontal clipping without breaking sticky */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--asphalt);
+  color: var(--bone);
+  min-height: 100vh;
+  overflow-x: clip;
+  position: relative;
+}
+
+/* Custom cursor handling */
+@media (pointer: fine) {
+  body:not(.reduce-motion) {
+    cursor: none;
+  }
+  body:not(.reduce-motion) a,
+  body:not(.reduce-motion) button {
+    cursor: none;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* Focus styles for keyboard accessibility */
+:focus-visible {
+  outline: 1px solid var(--xenon);
+  outline-offset: 4px;
+}
+
+/* ==========================================================================
+   GLOBAL FILM GRAIN OVERLAY
+   ========================================================================== */
+.grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 990;
+  opacity: 0.035; /* 3.5% opacity */
+}
+
+/* ==========================================================================
+   CUSTOM CURSOR ("THE HEADLIGHT")
+   ========================================================================== */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (pointer: fine) {
+  .custom-cursor {
+    display: flex;
+  }
+}
+
+/* Dot: 6px solid xenon */
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--xenon);
+  border-radius: 50%;
+  position: absolute;
+  transition: opacity 0.2s var(--easing), transform 0.2s var(--easing);
+}
+
+/* Ring: 28px ring drawn with 1px xenon stroke, no blur, no glow */
+.cursor-ring {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--xenon);
+  border-radius: 50%;
+  position: absolute;
+  transition: opacity 0.2s var(--easing), transform 0.2s var(--easing);
+}
+
+/* Horizontal Light Bar: 44x2px for links & buttons */
+.cursor-bar {
+  width: 44px;
+  height: 2px;
+  background-color: var(--xenon);
+  position: absolute;
+  opacity: 0;
+  transform: scaleX(0);
+  transition: opacity 0.25s var(--easing), transform 0.25s var(--easing), background-color 0.12s;
+}
+
+/* Tiny Mono Label */
+.cursor-label {
+  position: absolute;
+  left: 32px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--xenon);
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s var(--easing), transform 0.2s var(--easing);
+}
+
+/* Hover State on Links / Interactive */
+.custom-cursor.is-hovering .cursor-dot,
+.custom-cursor.is-hovering .cursor-ring {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+.custom-cursor.is-hovering .cursor-bar {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.custom-cursor.is-hovering .cursor-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Mousedown: Turns brighter for 120ms */
+.custom-cursor.is-active .cursor-bar,
+.custom-cursor.is-active .cursor-dot {
+  background-color: #FFFFFF;
+}
+.custom-cursor.is-active .cursor-ring {
+  border-color: #FFFFFF;
+}
+
+/* ==========================================================================
+   TYPOGRAPHY SYSTEM
+   ========================================================================== */
+.display-title {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 300;
+  font-size: clamp(40px, 7vw, 120px);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--bone);
+}
+
+.display-heading {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 300;
+  font-size: clamp(32px, 5vw, 76px);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--bone);
+}
+
+.display-lead {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 56px);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--bone);
+}
+
+.display-quote {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 300;
+  font-size: clamp(32px, 4.8vw, 72px);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.hud-mono {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fog);
+}
+
+/* Line reveal container */
+.line-mask {
+  overflow: hidden;
+  display: block;
+}
+
+.line-mask > * {
+  display: block;
+  transform: translateY(105%);
+  transition: transform 0.9s var(--easing), opacity 0.9s var(--easing);
+  opacity: 0;
+}
+
+.line-mask.is-revealed > * {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   PRELOADER
+   ========================================================================== */
+.preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s var(--easing), visibility 0.6s;
+}
+
+.preloader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: min(88vw, 420px);
+}
+
+.preloader-brand {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 300;
+  font-size: clamp(36px, 6vw, 64px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bone);
+  margin-bottom: 2rem;
+}
+
+.preloader-line-wrapper {
+  width: 100%;
+  height: 1px;
+  background-color: var(--hairline);
+  position: relative;
+  overflow: hidden;
+}
+
+.preloader-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  background-color: var(--xenon);
+  transform: translateX(-50%);
+  transition: width 0.1s ease-out, background-color 0.2s;
+}
+
+.preloader.is-finishing .preloader-line {
+  background-color: #FFFFFF;
+}
+
+.preloader-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.preloader-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--fog);
+}
+
+.preloader-counter {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--xenon);
+}
+
+/* ==========================================================================
+   NAVIGATION
+   ========================================================================== */
+.main-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 900;
+  background: transparent;
+  mix-blend-mode: difference;
+  transition: transform 0.4s var(--easing);
+}
+
+.main-nav.is-hidden {
+  transform: translateY(-100%);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.75rem 2.5rem;
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 400;
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bone);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bone);
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--xenon);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s var(--easing);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ==========================================================================
+   PINNED SCROLLYTELLING ARCHITECTURE (HERO & DISMANTLE)
+   ========================================================================== */
+.pinned-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.hero-wrapper {
+  height: 600vh;
+}
+
+.dismantle-wrapper {
+  height: 350vh;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background-color: var(--asphalt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sequence-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hero-fade-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 10;
+}
+
+/* 1px Xenon Progress Line at bottom of pinned stages */
+.pinned-progress-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--hairline);
+  z-index: 40;
+}
+
+.pinned-progress-fill {
+  width: 0%;
+  height: 100%;
+  background-color: var(--xenon);
+  transition: width 0.05s linear;
+}
+
+/* ==========================================================================
+   SECTION 1 — HERO
+   ========================================================================== */
+/* Left-edge HUD */
+.hero-hud {
+  position: absolute;
+  left: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  pointer-events: none;
+}
+
+.hud-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.hud-tick {
+  width: 6px;
+  height: 2px;
+  background-color: var(--taillight);
+  display: inline-block;
+}
+
+#hud-chapter-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--bone);
+}
+
+.hud-divider {
+  width: 20px;
+  height: 1px;
+  background-color: var(--hairline);
+}
+
+.hud-telemetry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.telemetry-row {
+  display: flex;
+  gap: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.telemetry-label {
+  color: var(--fog);
+  width: 44px;
+}
+
+.telemetry-value {
+  color: var(--bone);
+}
+
+/* Hero Chapters (positioned in open sky) */
+.hero-chapter {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s var(--easing);
+  width: min(88vw, 1100px);
+}
+
+.hero-chapter.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Chapter 1: 0–12% */
+.chapter-1 {
+  top: 18vh;
+  left: 8vw;
+}
+
+.hero-headline {
+  margin-bottom: 0.5rem;
+}
+
+.hero-subline {
+  font-size: clamp(16px, 1.4vw, 20px);
+  color: var(--fog);
+  max-width: 52ch;
+  margin-bottom: 3.5rem;
+}
+
+.hero-scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  opacity: 0.85;
+}
+
+.hint-pulse-line {
+  width: 48px;
+  height: 1px;
+  background-color: var(--xenon);
+  animation: pulse-line 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-line {
+  0%, 100% { opacity: 0.2; transform: scaleX(0.7); }
+  50% { opacity: 1; transform: scaleX(1); }
+}
+
+/* Chapter 2: 22–40% */
+.chapter-2 {
+  top: 22vh;
+  left: 12vw;
+  max-width: 700px;
+}
+
+/* Chapter 3: 50–68% */
+.chapter-3 {
+  top: 20vh;
+  right: 10vw;
+  width: auto;
+  max-width: 650px;
+  text-align: right;
+}
+
+/* Chapter 4: 80–100% */
+.chapter-4 {
+  top: 18vh;
+  left: 8vw;
+}
+
+.model-title {
+  margin-bottom: 0.75rem;
+}
+
+.model-specs {
+  color: var(--fog);
+  font-size: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.hero-action-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--xenon);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--xenon);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.hero-action-link:hover {
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+}
+
+/* ==========================================================================
+   SECTION 2 — STATEMENT (Not pinned, 100vh)
+   ========================================================================== */
+.statement-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--asphalt);
+  padding: 4rem 2rem;
+  position: relative;
+  z-index: 15;
+}
+
+.statement-container {
+  max-width: 1050px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.statement-label {
+  color: var(--fog);
+}
+
+.statement-quote {
+  color: var(--bone);
+}
+
+.statement-quote .word {
+  display: inline-block;
+  opacity: 0.15;
+  transition: opacity 0.3s ease-out;
+  margin-right: 0.25em;
+}
+
+/* ==========================================================================
+   SECTION 3 — DISMANTLE (Pinned, ~350vh)
+   ========================================================================== */
+.dismantle-header {
+  position: absolute;
+  top: 6vh;
+  left: 6vw;
+  z-index: 25;
+}
+
+.dismantle-meta {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.dismantle-title {
+  color: var(--bone);
+}
+
+/* Dismantle Callouts */
+.dismantle-callouts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.dismantle-callout {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s var(--easing), transform 0.6s var(--easing);
+}
+
+.dismantle-callout.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Precise positioning based on config percentages */
+.callout-body {
+  top: 32%;
+  left: 20%;
+}
+
+.callout-battery {
+  top: 72%;
+  left: 20%;
+}
+
+.callout-drive {
+  top: 68%;
+  left: 64%;
+}
+
+.callout-light {
+  top: 36%;
+  left: 64%;
+}
+
+.callout-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-left: 1px solid var(--xenon);
+  padding-left: 0.8rem;
+}
+
+.callout-title {
+  color: var(--xenon);
+  font-size: 11px;
+}
+
+.callout-desc {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--bone);
+  white-space: nowrap;
+}
+
+.callout-dot {
+  width: 5px;
+  height: 5px;
+  background-color: var(--xenon);
+  position: absolute;
+  top: 6px;
+  left: -3px;
+}
+
+.callout-svg-line {
+  display: none;
+}
+
+/* ==========================================================================
+   SECTION 4 — LINEUP (Hover Accordion, 100vh)
+   ========================================================================== */
+.lineup-section {
+  min-height: 100vh;
+  background-color: var(--asphalt);
+  position: relative;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 4rem;
+  overflow: hidden;
+}
+
+.lineup-header {
+  padding: 0 4vw 2.5rem 4vw;
+  max-width: 1920px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.lineup-label {
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.lineup-title {
+  color: var(--bone);
+}
+
+/* Full-width accordion container */
+.lineup-accordion {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 180px);
+  min-height: 600px;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  background-color: var(--asphalt);
+}
+
+/* Individual Slide */
+.lineup-slide {
+  position: relative;
+  height: 100%;
+  flex: 1 1 12vw;
+  min-width: 80px;
+  border-right: 1px solid var(--hairline);
+  background-color: var(--asphalt);
+  overflow: hidden;
+  transition: flex-grow 0.7s var(--easing);
+  text-align: left;
+  display: flex;
+}
+
+.lineup-slide:last-child {
+  border-right: none;
+}
+
+.lineup-slide.is-open {
+  flex-grow: 5.5; /* Takes remaining width (~52vw) */
+}
+
+/* Closed view elements */
+.slide-closed-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 2rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+  transition: opacity 0.4s var(--easing);
+}
+
+.lineup-slide.is-open .slide-closed-view {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slide-number {
+  color: var(--fog);
+  font-size: 12px;
+}
+
+.slide-rotated-name {
+  transform: rotate(-90deg);
+  white-space: nowrap;
+  letter-spacing: 0.2em;
+  font-size: 13px;
+  color: var(--bone);
+  margin-top: auto;
+  margin-bottom: 4rem;
+}
+
+.slide-thumb-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  overflow: hidden;
+}
+
+.slide-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 80% center;
+  filter: grayscale(100%) brightness(25%);
+  transition: filter 0.4s;
+}
+
+/* Open view elements */
+.slide-open-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem 4vw;
+  transition: opacity 0.5s var(--easing);
+  z-index: 3;
+}
+
+.lineup-slide.is-open .slide-open-view {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Floor line at 72% height */
+.slide-active-bg-line {
+  position: absolute;
+  top: 72%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--hairline);
+  z-index: 1;
+}
+
+.slide-image-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.slide-car-image {
+  position: absolute;
+  top: calc(72% - 240px);
+  left: 4%;
+  width: 85%;
+  max-width: 900px;
+  height: auto;
+  object-fit: contain;
+  opacity: 0;
+  transform: translateX(-6%);
+  transition: transform 0.8s var(--easing), opacity 0.6s var(--easing);
+}
+
+.lineup-slide.is-open .slide-car-image {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-content {
+  position: relative;
+  z-index: 4;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: auto;
+}
+
+.slide-car-name {
+  font-size: clamp(36px, 5vw, 68px);
+}
+
+.slide-tagline {
+  font-size: 16px;
+  color: var(--fog);
+  margin-top: 0.5rem;
+}
+
+.slide-spec-row {
+  display: flex;
+  gap: 3rem;
+  margin-top: auto;
+  padding-bottom: 1.5rem;
+}
+
+.spec-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.spec-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--fog);
+}
+
+.spec-value {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--bone);
+  letter-spacing: 0.05em;
+}
+
+.slide-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--hairline);
+  padding-top: 1.5rem;
+}
+
+.swatches {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.swatch {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+}
+
+.swatch.is-active {
+  outline: 1px solid var(--bone);
+  outline-offset: 2px;
+}
+
+.slide-configure-link {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--xenon);
+  transition: color 0.2s;
+}
+
+.slide-configure-link:hover {
+  color: #FFFFFF;
+}
+
+/* ==========================================================================
+   SECTION 5 — RESERVE (100vh)
+   ========================================================================== */
+.reserve-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  text-align: center;
+  padding: 4rem 2rem;
+  position: relative;
+  z-index: 15;
+}
+
+.reserve-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 720px;
+}
+
+.reserve-heading {
+  margin-bottom: 0.5rem;
+}
+
+.reserve-subline {
+  font-size: 16px;
+  color: var(--fog);
+  max-width: 48ch;
+  margin-bottom: 2rem;
+}
+
+.reserve-btn-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.reserve-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2.2rem;
+  border: 1px solid var(--xenon);
+  background-color: transparent;
+  color: var(--xenon);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  position: relative;
+  transition: background-color 0.25s var(--easing), color 0.25s var(--easing), border-color 0.25s var(--easing);
+}
+
+.reserve-tick {
+  width: 6px;
+  height: 2px;
+  background-color: var(--taillight);
+  display: none;
+}
+
+.reserve-btn:hover {
+  background-color: var(--xenon);
+  color: var(--asphalt);
+  border-color: var(--xenon);
+}
+
+.reserve-btn:hover .reserve-tick {
+  display: inline-block;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.site-footer {
+  background-color: var(--asphalt);
+  border-top: 1px solid var(--hairline);
+  padding: 5rem 4vw 3rem 4vw;
+  position: relative;
+  z-index: 15;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4rem;
+  padding-bottom: 4rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 400;
+  font-size: 2rem;
+  letter-spacing: 0.1em;
+  color: var(--bone);
+}
+
+.footer-links-grid {
+  display: flex;
+  gap: 5rem;
+  flex-wrap: wrap;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.footer-col-title {
+  color: var(--fog);
+  margin-bottom: 0.4rem;
+}
+
+.footer-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--bone);
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: var(--xenon);
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-copy,
+.footer-note {
+  color: var(--fog);
+  font-size: 10px;
+}
+
+/* ==========================================================================
+   MOBILE & RESPONSIVE RULES (< 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .nav-links {
+    gap: 1.5rem;
+  }
+  
+  .hero-hud {
+    left: 1.25rem;
+  }
+
+  .chapter-1, .chapter-2, .chapter-3, .chapter-4 {
+    left: 1.25rem;
+    right: 1.25rem;
+    width: calc(100% - 2.5rem);
+    text-align: left;
+  }
+
+  .chapter-3 {
+    text-align: left;
+  }
+
+  .lineup-section {
+    height: auto;
+    min-height: auto;
+    padding-bottom: 4rem;
+  }
+
+  .lineup-accordion {
+    flex-direction: column;
+    height: auto;
+    min-height: auto;
+    border-bottom: none;
+  }
+
+  .lineup-slide {
+    width: 100%;
+    min-height: 72px;
+    height: 72px;
+    flex: none;
+    border-right: none;
+    border-bottom: 1px solid var(--hairline);
+    transition: height 0.6s var(--easing);
+  }
+
+  .lineup-slide.is-open {
+    height: 520px;
+    flex-grow: 0;
+  }
+
+  .slide-closed-view {
+    flex-direction: row;
+    padding: 1rem 1.5rem;
+    align-items: center;
+  }
+
+  .slide-rotated-name {
+    transform: none;
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .slide-thumb-wrap {
+    position: relative;
+    width: 60px;
+    height: 36px;
+  }
+
+  .slide-open-view {
+    padding: 1.5rem;
+  }
+
+  .slide-car-image {
+    top: 18%;
+    left: 5%;
+    width: 90%;
+  }
+
+  .slide-spec-row {
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .footer-links-grid {
+    gap: 2.5rem;
+  }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY: PREFERS-REDUCED-MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .pinned-wrapper {
+    height: auto !important;
+  }
+
+  .stage {
+    position: relative !important;
+    height: auto !important;
+    min-height: 100vh;
+    padding: 4rem 2rem;
+  }
+
+  .sequence-canvas {
+    position: relative;
+    width: 100%;
+    max-height: 60vh;
+  }
+
+  .hero-chapter {
+    position: relative;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    opacity: 1 !important;
+    margin-bottom: 3rem;
+  }
+
+  .line-mask > * {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .custom-cursor {
+    display: none !important;
+  }
+}
+
